@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/sqoop2/" style="font-size: 10px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
+						<a href="/tags/sqoop2/" style="font-size: 20px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
 					</div>
 				</section>
 				
@@ -169,6 +169,203 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-用户指南shell命令" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/08/用户指南shell命令/" class="article-date">
+  	<time datetime="2018-03-08T05:25:00.000Z" itemprop="datePublished">2018-03-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/08/用户指南shell命令/">
+        用户指南shell命令
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="sqoop2系统入门之2汇总-用户指南shell命令"><a href="#sqoop2系统入门之2汇总-用户指南shell命令" class="headerlink" title="sqoop2系统入门之2汇总:用户指南shell命令"></a>sqoop2系统入门之2汇总:用户指南shell命令</h1><p>问题导读<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.sqoop2有哪两种运行模式？</span><br><span class="line">2.哪个模式，有些命令不支持？</span><br><span class="line">3.sqoop2辅助命令有哪些，作用是什么？</span><br><span class="line">4.set命令是否连接sqoop server？</span><br><span class="line">5.show命令显示哪些信息？</span><br><span class="line">6.如何使用show 命令显示指定信息？</span><br><span class="line">7.sqoop2中，如何定义数据源及数据流向？</span><br><span class="line">8.你认为link的作用是什么？</span><br></pre></td></tr></table></figure></p>
+<p>sqoop2对于sqoop1有很大的变化，但是网上并没有系统的文章，所以这里about云整理下。以下内容来自官网，及个人理解，如有错误或则异议，大家可回帖讨论。<br>Sqoop 2提供的命令是通过使用REST 接口进行交互。客户端能运行两种模式：交互和批处理模式。 create, update 和clone命令在批处理模式中当前不支持。交互模式支持所有的命令。</p>
+<p>可以使用sqoop2-shell，进入交互模式</p>
+<blockquote>
+<p>sqoop2-shell</p>
+</blockquote>
+<p>批处理模式需要额外的参数，需要添加上script.sqoop的路径</p>
+<blockquote>
+<p>sqoop2-shell /path/to/your/script.sqoop</p>
+</blockquote>
+<p>Sqoop client 脚本包括Sqoop client 命令，以#开头，表示注释。如下面例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Specify company server</span><br><span class="line">set server --host sqoop2.company.net</span><br><span class="line"></span><br><span class="line"># Executing given job</span><br><span class="line">start job --name 1</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-资源文件"><a href="#1-资源文件" class="headerlink" title="1. 资源文件"></a>1. 资源文件</h2><p>Sqoop 2 客户端可以加载资源文件。Sqoop 刚开始执行的时候，会检测当前用户的home目录是否有.sqoop2rc文件.如果存在，它将被执行。这个文件会被加载到交互模式和批处理模式。它将用于执行批处理模式的兼容命令。</p>
+<p>资源文件例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Configure our Sqoop 2 server automatically</span><br><span class="line">set server --host sqoop2.company.net</span><br><span class="line"></span><br><span class="line"># Run in verbose mode by default</span><br><span class="line">set option --name verbose --value true</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h2><p>Sqoop 2包含几种命令。每一个命令可能有一个以上函数接受不同的参数。并不是所有的命令都支持交互模式和批处理模式。</p>
+<h3 id="2-1-辅助命令"><a href="#2-1-辅助命令" class="headerlink" title="2.1 辅助命令"></a>2.1 辅助命令</h3><p>辅助命令是改善用户体验并纯粹在客户端运行的命令。因此，他们不需要连接到服务器。</p>
+<p><strong>exit</strong> ：退出客户端。也可以使用EOT 字符。<br><strong>history</strong> ：可以看到以前执行的命令<br><strong>help</strong> ：显示所有可用的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sqoop:000&gt; help</span><br><span class="line">For information about Sqoop, visit: [url=http://sqoop.apache.org/]http://sqoop.apache.org/[/url]</span><br><span class="line"></span><br><span class="line">Available commands:</span><br><span class="line">  exit    (\x  ) Exit the shell</span><br><span class="line">  history (\H  ) Display, manage and recall edit-line history</span><br><span class="line">  help    (\h  ) Display this help message</span><br><span class="line">  set     (\st ) Configure various client options and settings</span><br><span class="line">  show    (\sh ) Display various objects and configuration options</span><br><span class="line">  create  (\cr ) Create new object in Sqoop repository</span><br><span class="line">  delete  (\d  ) Delete existing object in Sqoop repository</span><br><span class="line">  update  (\up ) Update objects in Sqoop repository</span><br><span class="line">  clone   (\cl ) Create new object based on existing one</span><br><span class="line">  start   (\sta) Start job</span><br><span class="line">  stop    (\stp) Stop job</span><br><span class="line">  status  (\stu) Display status of a job</span><br><span class="line">  enable  (\en ) Enable object in Sqoop repository</span><br><span class="line">  disable (\di ) Disable object in Sqoop repository</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-set命令"><a href="#2-2-set命令" class="headerlink" title="2.2 set命令"></a>2.2 set命令</h3><p>Set命令允许设置客户端属性，类似辅助命令，不需要链接Sqoop server。Set命令不用于重新配置Sqoop server</p>
+<p>可用函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">函数		描述</span><br><span class="line">-------------------------</span><br><span class="line">server	设置server连接配置</span><br><span class="line">选项		设置客户端选项</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-2-1-Set-Server-功能"><a href="#2-2-1-Set-Server-功能" class="headerlink" title="2.2.1 Set Server 功能"></a>2.2.1 Set Server 功能</h4><p>配置连接Sqoop server-host端口和web应用程序名。参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">参数				默认值			描述</span><br><span class="line">-h, --host		localhost		Server name (FQDN)，Sqoop server 运行在什么地方</span><br><span class="line">-p, --port		12000			TCP 端口</span><br><span class="line">-w, --webapp	sqoop			Jetty应用程序名</span><br><span class="line">-u, --url						Sqoop Server的url的格式</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<blockquote>
+<p>set server –host sqoop2.company.net –port 80 –webapp sqoop</p>
+</blockquote>
+<p>或则</p>
+<blockquote>
+<p>set server –url [url=<a href="http://sqoop2.company.net:80/sqoop]http://sqoop2.company.net:80/sqoop[/url]" target="_blank" rel="noopener">http://sqoop2.company.net:80/sqoop]http://sqoop2.company.net:80/sqoop[/url]</a></p>
+</blockquote>
+<p><strong>注意</strong>：<br>如果给定了–url，那么–host, –port 或则–webapp将会被忽略</p>
+<h4 id="2-2-2Set-选项功能"><a href="#2-2-2Set-选项功能" class="headerlink" title="2.2.2Set 选项功能"></a>2.2.2Set 选项功能</h4><p>配置Sqoop 客户端相关选项，这个函数有两个必须的参数name 和value.名称表示内部属性名称，值包含应设置的新值。选项名如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">选项名			默认值			描述</span><br><span class="line">verbose			false		启用verbose模式m客户端会输出额外的信息</span><br><span class="line">poll-timeout	10000		Server poll 超时时间,单位为毫秒</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>set option –name verbose –value true</p>
+</blockquote>
+<blockquote>
+<p>set option –name poll-timeout –value 20000</p>
+</blockquote>
+<h3 id="2-3-show命令"><a href="#2-3-show命令" class="headerlink" title="2.3 show命令"></a>2.3 show命令</h3><p>show命令显示如下各种信息。可用的功能：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">功能			描述</span><br><span class="line">server		显示连接信息到sqoopserver</span><br><span class="line">option		显示客户端选项</span><br><span class="line">version		显示构建的版本，-all选项显示server构建版本和支持的api版本</span><br><span class="line">connector	显示连接配置和它的相关配置</span><br><span class="line">driver		显示驱动配置和它的相关配置</span><br><span class="line">link		显示sqoop link</span><br><span class="line">job			显示sqoop jobs</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-3-1Show-Server-功能"><a href="#2-3-1Show-Server-功能" class="headerlink" title="2.3.1Show Server 功能"></a>2.3.1Show Server 功能</h4><p>显示 Sqoop server连接的详细信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-a, --all        	显示连接相关信息（host, 端口, 应用程序名）</span><br><span class="line">-h, --host        	显示主机</span><br><span class="line">-p, --port        	显示端口</span><br><span class="line">-w, --webapp        显示应用程序名</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>show server –all</p>
+</blockquote>
+<h4 id="2-3-2-Show-Option-功能"><a href="#2-3-2-Show-Option-功能" class="headerlink" title="2.3.2 Show Option 功能"></a>2.3.2 Show Option 功能</h4><p>显示客户端选项值，这个功能当没有参数的时，会显示所有客户端信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数					描述</span><br><span class="line">-n, --name        	显示客户端给定的值</span><br></pre></td></tr></table></figure>
+<p>可检测 Set 选项功能部分，得到支持的option名称</p>
+<p>例子：</p>
+<blockquote>
+<p>show option –name verbose</p>
+</blockquote>
+<h4 id="2-3-3-Show-版本功能"><a href="#2-3-3-Show-版本功能" class="headerlink" title="2.3.3 Show 版本功能"></a>2.3.3 Show 版本功能</h4><p>显示构建的客户端和服务端的版本，以及支持的 rest api 版本.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">参数					描述</span><br><span class="line">-a, --all        	显示所有信息（服务端，客户端，api）</span><br><span class="line">-c, --client        显示客户端版本</span><br><span class="line">-s, --server        显示服务端版本号</span><br><span class="line">-p, --api			显示支持api版本</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<blockquote>
+<p>show version –all</p>
+</blockquote>
+<h4 id="2-3-4Show-Connector-功能"><a href="#2-3-4Show-Connector-功能" class="headerlink" title="2.3.4Show Connector 功能"></a>2.3.4Show Connector 功能</h4><p>显示持久化链接配置和相关配置，用于创建相关的 link 和job objects</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参数					描述Connector 的信息</span><br><span class="line">-a, --all        	显示所有</span><br><span class="line">-c, --cid &lt;x&gt;       显示带有id的链接的信息</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<blockquote>
+<p>show connector –all or show connector</p>
+</blockquote>
+<h4 id="2-3-5Show-Driver-功能"><a href="#2-3-5Show-Driver-功能" class="headerlink" title="2.3.5Show Driver 功能"></a>2.3.5Show Driver 功能</h4><p>显示持久化驱动配置和他的相关配置用于创建 job objects.这个功能没有其它参数。只有一个注册的驱动在sqoop。<br>例子:</p>
+<blockquote>
+<p>show driver</p>
+</blockquote>
+<h4 id="2-3-6Show-Link-功能"><a href="#2-3-6Show-Link-功能" class="headerlink" title="2.3.6Show Link 功能"></a>2.3.6Show Link 功能</h4><p>显示link持久化对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参数					描述</span><br><span class="line">-a, --all        	显示所有有效link</span><br><span class="line">-n, --name &lt;x&gt;      显示指定名字的link</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>show link –all or show link –name linkName</p>
+</blockquote>
+<h4 id="2-3-7-Show-job功能"><a href="#2-3-7-Show-job功能" class="headerlink" title="2.3.7 Show job功能"></a>2.3.7 Show job功能</h4><p>显示持久化job 对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参数					描述</span><br><span class="line">-a, --all        	显示所有有效job</span><br><span class="line">-n, --name &lt;x&gt;      显示带有名字的job</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-3-8-Show-Submission-功能"><a href="#2-3-8-Show-Submission-功能" class="headerlink" title="2.3.8 Show Submission 功能"></a>2.3.8 Show Submission 功能</h4><p>显示持久化job submission对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-j, --job &lt;x&gt;        	显示提交job的有效submission</span><br><span class="line">-d, --detail        	显示提交hob的所有详细信息</span><br></pre></td></tr></table></figure></p>
+<p>例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show submission</span><br><span class="line">show submission --j jobName</span><br><span class="line">show submission --job jobName --detail</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-4-create命令"><a href="#2-4-create命令" class="headerlink" title="2.4 create命令"></a>2.4 create命令</h3><p>创建新的link和job对象。这个命令仅支持交互模式。在分别创建link和job对象时，会要求用户输入link配置和job的from /to和驱动配置</p>
+<p>可用功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">功能			描述</span><br><span class="line">link	创建新的link对象</span><br><span class="line">job		创建新的hob对象</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-4-1-create-link功能"><a href="#2-4-1-create-link功能" class="headerlink" title="2.4.1 create link功能"></a>2.4.1 create link功能</h4><p>创建新的link对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数							描述</span><br><span class="line">-c, --connector &lt;x&gt;        	创建名字为&lt;x&gt;的link对象</span><br></pre></td></tr></table></figure></p>
+<p>例子</p>
+<blockquote>
+<p>create link –connector connectorName or create link -c connectorName</p>
+</blockquote>
+<h4 id="2-4-2-create-Job-功能"><a href="#2-4-2-create-Job-功能" class="headerlink" title="2.4.2 create Job 功能"></a>2.4.2 create Job 功能</h4><p>创建新的job对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-f, --from &lt;x&gt;        	创建新的名字为&lt;x&gt;的from link的job对象</span><br><span class="line">-t, --to &lt;t&gt;        	创建新的名字为&lt;t&gt;的to link的job对象</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<blockquote>
+<p>create job –from fromLinkName –to toLinkName or create job –f fromLinkName –t toLinkName</p>
+</blockquote>
+<p>这里也是sqoop2与sqoop1区别最大的地方：<br>sqoop1是自己指定的，而sqoop2则是先定义link然后，链接两个link.</p>
+<h3 id="2-5-update命令"><a href="#2-5-update命令" class="headerlink" title="2.5 update命令"></a>2.5 update命令</h3><p>更新命令仅在交互模式下支持，允许编辑link和job对象。</p>
+<h4 id="2-5-1更新link功能"><a href="#2-5-1更新link功能" class="headerlink" title="2.5.1更新link功能"></a>2.5.1更新link功能</h4><p>更新link对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	更新名字为&lt;x&gt;的link</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>update link –name linkName</p>
+</blockquote>
+<h4 id="2-5-2更新job功能"><a href="#2-5-2更新job功能" class="headerlink" title="2.5.2更新job功能"></a>2.5.2更新job功能</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	更新名字为&lt;x&gt;的job</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<blockquote>
+<p>update job –name jobName</p>
+</blockquote>
+<h3 id="2-6-delete命令"><a href="#2-6-delete命令" class="headerlink" title="2.6 delete命令"></a>2.6 delete命令</h3><p>从sqoop server删除link和job</p>
+<h4 id="2-6-1-删除link功能"><a href="#2-6-1-删除link功能" class="headerlink" title="2.6.1 删除link功能"></a>2.6.1 删除link功能</h4><p>删除link<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	删除名字为link的对象</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>delete link –name linkName</p>
+</blockquote>
+<h4 id="2-6-1删除job功能"><a href="#2-6-1删除job功能" class="headerlink" title="2.6.1删除job功能"></a>2.6.1删除job功能</h4><p>删除job<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	删除名字为&lt;x&gt;的job</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>delete job –name jobName</p>
+</blockquote>
+<h3 id="2-7-clone命令"><a href="#2-7-clone命令" class="headerlink" title="2.7 clone命令"></a>2.7 clone命令</h3><p>Clone 名字从sqoop server加载已存在的link和job.允许用户就地更新，这样会创建新的link或则job。这个命令不支持批处理模式。</p>
+<h4 id="2-7-1-clone-link功能"><a href="#2-7-1-clone-link功能" class="headerlink" title="2.7.1 clone link功能"></a>2.7.1 clone link功能</h4><p>Clone已经存在的link<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数	描述</span><br><span class="line">-n, --name &lt;x&gt;        	Clone名字为&lt;x&gt;link</span><br></pre></td></tr></table></figure></p>
+<p>例子</p>
+<blockquote>
+<p>clone link –name linkName</p>
+</blockquote>
+<h4 id="2-7-2-clone-job功能"><a href="#2-7-2-clone-job功能" class="headerlink" title="2.7.2 clone job功能"></a>2.7.2 clone job功能</h4><p>clone已经存在的job.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	clone名字为&lt;x&gt;的job</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>clone job –name jobName</p>
+</blockquote>
+<h3 id="2-8start命令"><a href="#2-8start命令" class="headerlink" title="2.8start命令"></a>2.8start命令</h3><p>start命令执行现有的Sqoop job.</p>
+<h4 id="2-8-1-start-job功能"><a href="#2-8-1-start-job功能" class="headerlink" title="2.8.1 start job功能"></a>2.8.1 start job功能</h4><p>start job，启动 已经运行的job被视为无效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	启动名字为 &lt;x&gt;的job</span><br><span class="line">-s, --synchronous       同步作业执行</span><br></pre></td></tr></table></figure></p>
+<p>例子：</p>
+<blockquote>
+<p>start job –name jobName</p>
+</blockquote>
+<blockquote>
+<p>start job –name jobName –synchronous</p>
+</blockquote>
+<h3 id="2-9-stop命令"><a href="#2-9-stop命令" class="headerlink" title="2.9 stop命令"></a>2.9 stop命令</h3><p>中断作业执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	中断名字为&lt;x&gt;的job</span><br><span class="line">···</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"></span><br><span class="line">&gt; stop job --name jobName</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.0 status命令</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">状态命令将检索作业的最后状态。</span><br><span class="line"></span><br><span class="line">#### 3.0.1 job状态功能</span><br><span class="line"></span><br><span class="line">检索给定job的状态</span><br></pre></td></tr></table></figure></p>
+<p>参数                        描述<br>-n, –name <x>            检索名字为<x>的job的状态<br><code>`</code></x></x></p>
+<blockquote>
+<p>status job –name jobName</p>
+</blockquote>
+<blockquote>
+<p>Next  Previous</p>
+</blockquote>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqoop2/">sqoop2</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-用户指南5分钟入门Demo" class="article article-type-post" itemscope itemprop="blogPost">
   
