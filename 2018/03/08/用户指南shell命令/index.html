@@ -16,7 +16,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/03/08/用户指南shell命令/index.html">
 <meta property="og:site_name" content="广志大兄弟的个人网站">
 <meta property="og:description" content="sqoop2系统入门之2汇总:用户指南shell命令问题导读123456781.sqoop2有哪两种运行模式？2.哪个模式，有些命令不支持？3.sqoop2辅助命令有哪些，作用是什么？4.set命令是否连接sqoop server？5.show命令显示哪些信息？6.如何使用show 命令显示指定信息？7.sqoop2中，如何定义数据源及数据流向？8.你认为link的作用是什么？ sqoop2对于s">
-<meta property="og:updated_time" content="2018-03-10T05:23:03.084Z">
+<meta property="og:updated_time" content="2018-03-10T05:29:22.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用户指南shell命令">
 <meta name="twitter:description" content="sqoop2系统入门之2汇总:用户指南shell命令问题导读123456781.sqoop2有哪两种运行模式？2.哪个模式，有些命令不支持？3.sqoop2辅助命令有哪些，作用是什么？4.set命令是否连接sqoop server？5.show命令显示哪些信息？6.如何使用show 命令显示指定信息？7.sqoop2中，如何定义数据源及数据流向？8.你认为link的作用是什么？ sqoop2对于s">
@@ -344,8 +344,14 @@
 <p>start job –name jobName –synchronous</p>
 </blockquote>
 <h3 id="2-9-stop命令"><a href="#2-9-stop命令" class="headerlink" title="2.9 stop命令"></a>2.9 stop命令</h3><p>中断作业执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	中断名字为&lt;x&gt;的job</span><br><span class="line">···</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"></span><br><span class="line">&gt; stop job --name jobName</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.0 status命令</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">状态命令将检索作业的最后状态。</span><br><span class="line"></span><br><span class="line">#### 3.0.1 job状态功能</span><br><span class="line"></span><br><span class="line">检索给定job的状态</span><br></pre></td></tr></table></figure>
-<p>参数                        描述<br>-n, –name <x>            检索名字为<x>的job的状态<br><code>`</code></x></x></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	中断名字为&lt;x&gt;的job</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<blockquote>
+<p>stop job –name jobName</p>
+</blockquote>
+<h3 id="3-0-status命令"><a href="#3-0-status命令" class="headerlink" title="3.0 status命令"></a>3.0 status命令</h3><p>状态命令将检索作业的最后状态。</p>
+<h4 id="3-0-1-job状态功能"><a href="#3-0-1-job状态功能" class="headerlink" title="3.0.1 job状态功能"></a>3.0.1 job状态功能</h4><p>检索给定job的状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参数						描述</span><br><span class="line">-n, --name &lt;x&gt;        	检索名字为&lt;x&gt;的job的状态</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>status job –name jobName</p>
 </blockquote>
