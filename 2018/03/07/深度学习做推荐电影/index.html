@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深度学习做推荐电影 | 广志大兄弟的个人网站</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介几乎所有人都喜欢与家人、朋友一起观看电影度过闲暇时光。大家可能都有过这样的体验：本想在接下来的两个小时里看一个电影，却坐在沙发上坐了20分钟不知道看什么，选择困难症又犯了，结果好心情也变得沮丧。所以，我们很需要一个电脑代理，在做挑选电影的时候提供推荐。 现在，电影智能推荐系统已经成为日常生活中的一部分。  Data Science Central 曾表示：  “虽然硬数据很难获得，但知情人士估">
+<meta name="keywords" content="深度学习.电影推荐">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习做推荐电影">
+<meta property="og:url" content="http://yoursite.com/2018/03/07/深度学习做推荐电影/index.html">
+<meta property="og:site_name" content="广志大兄弟的个人网站">
+<meta property="og:description" content="简介几乎所有人都喜欢与家人、朋友一起观看电影度过闲暇时光。大家可能都有过这样的体验：本想在接下来的两个小时里看一个电影，却坐在沙发上坐了20分钟不知道看什么，选择困难症又犯了，结果好心情也变得沮丧。所以，我们很需要一个电脑代理，在做挑选电影的时候提供推荐。 现在，电影智能推荐系统已经成为日常生活中的一部分。  Data Science Central 曾表示：  “虽然硬数据很难获得，但知情人士估">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59156a074ada0.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59156b540ad5a.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/5915754de038f.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/591575ed6cbe8.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/5915775e9ce9a.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59157d3b666f7.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59157ec61897b.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/5915869245d0a.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/5915870809f4e.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/5915874655a48.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/591587603eeda.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/591587b2f2d5f.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/591587d52861f.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/591587f40c416.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59158814e9846.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59158836892e9.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/5915886713383.png?imageMogr2/format/jpg/quality/90">
+<meta property="og:updated_time" content="2018-03-07T11:38:51.161Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习做推荐电影">
+<meta name="twitter:description" content="简介几乎所有人都喜欢与家人、朋友一起观看电影度过闲暇时光。大家可能都有过这样的体验：本想在接下来的两个小时里看一个电影，却坐在沙发上坐了20分钟不知道看什么，选择困难症又犯了，结果好心情也变得沮丧。所以，我们很需要一个电脑代理，在做挑选电影的时候提供推荐。 现在，电影智能推荐系统已经成为日常生活中的一部分。  Data Science Central 曾表示：  “虽然硬数据很难获得，但知情人士估">
+<meta name="twitter:image" content="https://static.leiphone.com/uploads/new/article/740_740/201705/59156a074ada0.png?imageMogr2/format/jpg/quality/90">
+  
+    <link rel="alternative" href="/atom.xml" title="广志大兄弟的个人网站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/H%2B.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">广志大兄弟</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="mail" target="_blank" href="/itguangzhi@163.com" title="mail">mail</a>
+					        
+								<a class="qq" target="_blank" href="/3534466071" title="qq">qq</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/sqoop2/" style="font-size: 20px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">广志大兄弟</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">广志大兄弟</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="mail" target="_blank" href="/itguangzhi@163.com" title="mail">mail</a>
+			        
+						<a class="qq" target="_blank" href="/3534466071" title="qq">qq</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-深度学习做推荐电影" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/07/深度学习做推荐电影/" class="article-date">
+  	<time datetime="2018-03-07T11:37:12.000Z" itemprop="datePublished">2018-03-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深度学习做推荐电影
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习-电影推荐/">深度学习.电影推荐</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>几乎所有人都喜欢与家人、朋友一起观看电影度过闲暇时光。大家可能都有过这样的体验：本想在接下来的两个小时里看一个电影，却坐在沙发上坐了20分钟不知道看什么，选择困难症又犯了，结果好心情也变得沮丧。所以，我们很需要一个电脑代理，在做挑选电影的时候提供推荐。</p>
+<p>现在，电影智能推荐系统已经成为日常生活中的一部分。 </p>
+<p>Data Science Central 曾表示：</p>
+<blockquote>
+<p>“虽然硬数据很难获得，但知情人士估计，对亚马逊和Netflix这样的大型电商平台，推荐系统为它们带来高达10%至25%的收入增长”。</p>
+</blockquote>
+<p>在项目中，我研究了一些针对电影推荐的基本算法，并尝试将深度学习融入到电影推荐系统中。 </p>
+<p>把娱乐与视觉艺术相结合，电影是一个很好的例子。电影海报可以直接、快速地把电影信息传达给观众。Design Mantic表示：“<strong>不论上映前后，电影海报都是创造噱头的主要因素。多半的人（目标观众）都根据海报来决定买不买票，看不看电影</strong>。”<em>我们甚至可以仅仅根据海报字体，来推测这个电影的情绪</em>。</p>
+<p>这听起来有点像魔术——但看一眼海报就预测出电影的类型，的确是可能的。就拿我来说，瞟一眼海报就知道我想不想看这个电影了。举个例子，我不是卡通迷，一看到有卡通主题海报，就知道不是我的菜。这个决策的过程很直接，并不需要阅读电影评论（不确定谁真的有时间读那些评论）。因此，除了标准的电影推荐算法，我还用了深度学习来处理海报，并将相似的电影推荐给用户。最终目标是模仿人类视觉，并仅仅通过观察海报，就能用深度学习创建一个直观的电影推荐系统。该项目是受到Ethan Rosenthal博客启发。我对他博客里的代码进行了修改，以适应这个项目的算法。</p>
+<p>我们用的是从 MovieLens 下载的电影数据集。他包含9066个电影和671名用户，分成了100000个打分和1300个标签。这个数据集最后更新于10/2016.</p>
+<h2 id="协同过滤"><a href="#协同过滤" class="headerlink" title="协同过滤"></a>协同过滤</h2><p>粗略地说，有三种类型的推荐系统（不包括简单的评级方法）</p>
+<ul>
+<li>基于内容的推荐</li>
+<li>协同过滤</li>
+<li>混合模型<br>“基于内容的推荐”是一个回归问题，我们把电影内容作为特征，对用户对电影的评分做预测。</li>
+</ul>
+<p>而在“协同过滤”推荐系统中，一般无法提前获得内容特征。是通过用户之间的相似度（用户们给了用一个电影相同的评级）和电影之间的相似度（有相似用户评级的电影），来学习潜在特征，同时预测用户对电影的评分。此外，学习了电影的特征之后，我们便可以衡量电影之间的相似度，并根据用户历史观影信息，向他/她推荐最相似的电影。</p>
+<p>“基于内容的推荐”和“协同过滤”是10多年前最先进的技术。很显然，现在有很多模型和算法可以提高预测效果。比如，针对事先缺乏用户电影评分信息的情况，可以使用隐式矩阵分解，用偏好和置信度取代用户电影打分——比如用户对电影推荐有多少次点击，以此进行协同过滤。另外，我们还可以将“内容推荐”与“协同过滤”的方法结合起来，将内容作为侧面信息来提高预测精度。这种混合方法，可以用“学习进行排序”（”Learning to Rank” ）算法来实现。</p>
+<p>该项目中，我会聚焦于“协同过滤”方法。首先，我将讨论如何不使用回归，而是电影（用户）相似度来预测评分，并基于相似度做电影推荐。然后，我将讨论如何使用回归同时学习潜在特征、做电影推荐。最后会谈谈如何在推荐系统中使用深度学习。</p>
+<h2 id="电影相似性"><a href="#电影相似性" class="headerlink" title="电影相似性"></a>电影相似性</h2><p>对于基于协作过滤的推荐系统，首先要建立评分矩阵。其中，每一行表示一个用户，每一列对应其对某一电影的打分。建立的评分矩阵如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_csv(&apos;ratings.csv&apos;, sep=&apos;,&apos;)  </span><br><span class="line">df_id = pd.read_csv(&apos;links.csv&apos;, sep=&apos;,&apos;) </span><br><span class="line">df = pd.merge(df, df_id, on=[&apos;movieId&apos;])   </span><br><span class="line"></span><br><span class="line">rating_matrix = np.zeros((df.userId.unique().shape[0], max(df.movieId)))    </span><br><span class="line">for row in df.itertuples():    </span><br><span class="line">rating_matrix[row[1]-1, row[2]-1] = row[3]    </span><br><span class="line">rating_matrix = rating_matrix[:,:9000]</span><br></pre></td></tr></table></figure></p>
+<p>这里“ratings.csv”包含用户id，电影id, 评级，和时间信息；”link.csv”包括电影id, IMDB id,和TMDB id。每一个电影利用 API 从 Movie Databasewebsite 获得海报，都需要 IMDB id——因此，我们将两个表格结合到一起。我们检验了评分矩阵的稀疏性，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sparsity = float(len(ratings.nonzero()[0]))    </span><br><span class="line">sparsity /= (ratings.shape[0] * ratings.shape[1])    </span><br><span class="line">sparsity *= 100</span><br></pre></td></tr></table></figure></p>
+<p>当非零项（entry）只有1.40%的时候评级矩阵是稀疏的。现在，为了训练和测试，我们将评分矩阵分解成两个较小的矩阵。我们从评分矩阵中删除了10个评分，把它们放入测试集。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">train_matrix = rating_matrix.copy()    </span><br><span class="line">test_matrix = np.zeros(ratings_matrix.shape)    </span><br><span class="line"></span><br><span class="line">for i in xrange(rating_matrix.shape[0]):    </span><br><span class="line">rating_idx = np.random.choice(    </span><br><span class="line">rating_matrix[i, :].nonzero()[0],    </span><br><span class="line">size=10,    </span><br><span class="line">replace=True)    </span><br><span class="line">train_matrix[i, rating_idx] = 0.0    </span><br><span class="line">test_matrix[i, rating_idx] = rating_matrix[i, rating_idx]</span><br></pre></td></tr></table></figure></p>
+<p>根据以下公式计算用户/电影中的（余弦Cosine) 相似性</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/59156a074ada0.png?imageMogr2/format/jpg/quality/90" alt="公式"></p>
+<p>这里s(u,v)是用户u和v之间的余弦相似度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">similarity_user = train_matrix.dot(train_matrix.T) + 1e-9    </span><br><span class="line">norms = np.array([np.sqrt(np.diagonal(similarity_user))])    </span><br><span class="line">similarity_user = ( similarity_user / (norms * norms.T) )    </span><br><span class="line"></span><br><span class="line">similarity_movie = train_matrix.T.dot(train_matrix) + 1e-9    </span><br><span class="line">norms = np.array([np.sqrt(np.diagonal(similarity_movie))])    </span><br><span class="line">similarity_movie = ( similarity_movie / (norms * norms.T) )</span><br></pre></td></tr></table></figure></p>
+<p>利用用户之间的相似性，我们能预测每个用户对电影的评级，并计算出相应的MSE。该预测基于相似用户的评分。特别地，可以根据以下公式进行打分预测：</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/59156b540ad5a.png?imageMogr2/format/jpg/quality/90" alt="公式2"></p>
+<p>用户u对电影i的预测，是用户v对电影的评分的（标准化的）加权和。权重为用户u和v的相似度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.metrics import mean_squared_error    </span><br><span class="line"></span><br><span class="line">prediction = similarity_user.dot(train_matrix) / np.array([np.abs(similarity_user).sum(axis=1)]).T    </span><br><span class="line">prediction = prediction[test_matrix.nonzero()].flatten()    </span><br><span class="line">test_vector = test_matrix[test_matrix.nonzero()].flatten()    </span><br><span class="line">mse = mean_squared_error(prediction, test_vector)    </span><br><span class="line"></span><br><span class="line">print &apos;MSE = &apos; + str(mse)</span><br></pre></td></tr></table></figure></p>
+<p>预测的MSE为9.8252。这个数字意味着什么？这个推荐系统是好是坏？仅仅看着MSE结果来评估预测效果不是很符合直觉。因此，我们直接检查电影推荐来评估。我们将搜索一个感兴趣的电影，并让电脑代理来推荐几部电影。首先要得到相应的电影海报，这样就能看到都有什么电影被推荐。我们使用IMDB id,使用它的API从Movie Database 网站获取海报。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">import requests    </span><br><span class="line">import json    </span><br><span class="line"></span><br><span class="line">from IPython.display import Image    </span><br><span class="line">from IPython.display import display    </span><br><span class="line">from IPython.display import HTML    </span><br><span class="line"></span><br><span class="line">idx_to_movie = &#123;&#125;    </span><br><span class="line">for row in df_id.itertuples():    </span><br><span class="line">idx_to_movie[row[1]-1] = row[2]    </span><br><span class="line">idx_to_movie    </span><br><span class="line"></span><br><span class="line">k = 6    </span><br><span class="line">idx = 0    </span><br><span class="line">movies = [ idx_to_movie[x] for x in np.argsort(similarity_movie[idx,:])[:-k-1:-1] ]    </span><br><span class="line">movies = filter(lambda imdb: len(str(imdb)) == 6, movies)    </span><br><span class="line"></span><br><span class="line">n_display = 5   </span><br><span class="line">URL = [0]*n_display    </span><br><span class="line">IMDB = [0]*n_display    </span><br><span class="line">i = 0    </span><br><span class="line">for movie in movies:    </span><br><span class="line">(URL[i], IMDB[i]) = get_poster(movie, base_url)    </span><br><span class="line">i += 1    </span><br><span class="line"></span><br><span class="line">images = &apos;&apos;    </span><br><span class="line">for i in range(n_display):    </span><br><span class="line">images += &quot;&lt;img style=&apos;width: 100px; margin: 0px; \    </span><br><span class="line">float: left; border: 1px solid black;&apos; src=&apos;%s&apos; /&gt;&quot; \    </span><br><span class="line">% URL[i]    </span><br><span class="line"></span><br><span class="line">display(HTML(images))</span><br></pre></td></tr></table></figure></p>
+<p>好玩的来了！让我们来搜索一个电影并看看四个最相似的推荐。让我们试着搜索《盗火线》，在左手边第一个，后面是四部推荐的电影。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/5915754de038f.png?imageMogr2/format/jpg/quality/90" alt="tupian1"></p>
+<p>《盗火线》是1995年上映的一部美国犯罪电影，由罗伯特·德·尼罗、阿尔·帕西诺主演。搜索结果看起来不错。但《离开拉斯维加斯》可能不是一个好的建议，我猜原因是因为电影《勇闯夺命岛》里有尼古拉斯·凯奇，《The Rock》，以及对喜欢 《盗火线》的观众而言，它是一个不错的推荐。这可能是相似性矩阵和协同过滤的缺点之一。让我们试试更多的例子。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/591575ed6cbe8.png?imageMogr2/format/jpg/quality/90" alt="tupian2"></p>
+<p>这个看起还好。《玩具总动员2》绝对是应该推荐给喜欢《玩具总动员》的观众。但是《阿甘正传》在我看来不合适。显然，因为汤姆·汉克斯的声音出现在《玩具总动员》里，所以《阿甘正传》也被推荐了。值得注意的是，我们可以只看一眼海报就分辨出《玩具总动员》与 《阿甘正传》的区别，比如电影类型、情绪等。假设每一个小孩都喜欢《玩具总动员》，他们可能会忽略《阿甘正传》。</p>
+<h3 id="交替随机梯度下降"><a href="#交替随机梯度下降" class="headerlink" title="交替随机梯度下降"></a>交替随机梯度下降</h3><p>在前面的讨论中，我们简单地计算了用户和电影的余弦相似度，并以此来预测用户对电影的评分，还根据某电影推荐其它电影。现在，我们可以把问题做为一个回归问题；对所有的电影加入潜在特征y，对所有用户加入权重向量x。目标是将评分预测的（在 2-norm 的正则化条件下）MSE最小化。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/5915775e9ce9a.png?imageMogr2/format/jpg/quality/90" alt="tupian3"></p>
+<p>权重向量和特征向量都是决策变量。显然，这不是一个凸函数问题，现在也不需要过分担心这个非凸函数的收敛性。有很多方法能解决非凸函数的优化问题。方法之一就是以交替方式（）解决权重向量（对用户）和特征向量（对电影）。处理权重向量时，假设特征向量是常向量；处理特征向量时，假设权重向量是常向量。解决这个回归问题的另一种方法，是将权重向量与特征向量的更新结合起来，在同一个迭代中更新它们。另外，还可以借助随机梯度下降来加速计算。这里，我用随机梯度下降来解决这个回归问题，我们的MSE预测如下：</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/59157d3b666f7.png?imageMogr2/format/jpg/quality/90" alt="tupian4"></p>
+<p>这个MSE比用相似性矩阵得到的，要小得多。当然，我们也可以使用网格搜索和交叉验证对模型、算法调参。再看看电影搜索的推荐：</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/59157ec61897b.png?imageMogr2/format/jpg/quality/90" alt="tupian6"></p>
+<p>看起来并不是很好。我觉得这四部电影不应该通过搜索《盗火线》推荐给我，他们看起来与《盗火线》完全不相关，这四个电影是浪漫、戏剧类。如果我找的是一部有大明星的美国犯罪电影，我凭什么会想要看戏剧电影? 这让我很困惑——一个好的MSE的结果可能会给我们一个风马牛不相及的推荐。</p>
+<p>因此，我们讨论一下基于协同过滤的推荐系统的弱点。</p>
+<ul>
+<li><p>协同过滤方法通过使用数据，来发现类似的用户和电影，这将导致热门电影比小众电影更容易被推荐。</p>
+</li>
+<li><p>由于新上映的电影没有太多的使用数据，指望协同过滤向用户推荐任何新电影很不现实。</p>
+</li>
+</ul>
+<p>接下来，我们将考虑采用另一种方法来处理协同过滤问题——用深度学习推荐电影。</p>
+<h3 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h3><p>我们将在Keras中用VGG16来训练神经网络。我们的数据集中没有目标，只是将倒数第四层作为一个特征向量。我们用这个特征向量，来描述数据集中的每一个电影。雷锋网提醒，在训练神经网络之前，还需要做一些预处理，训练过程如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">df_id = pd.read_csv(&apos;links.csv&apos;, sep=&apos;,&apos;)    </span><br><span class="line"></span><br><span class="line">idx_to_movie = &#123;&#125;    </span><br><span class="line">for row in df_id.itertuples():    </span><br><span class="line">idx_to_movie[row[1]-1] = row[2]    </span><br><span class="line"></span><br><span class="line">total_movies = 9000    </span><br><span class="line"></span><br><span class="line">movies = [0]*total_movies    </span><br><span class="line">for i in range(len(movies)):    </span><br><span class="line">if i in idx_to_movie.keys() and len(str(idx_to_movie[i])) == 6:    </span><br><span class="line">movies[i] = (idx_to_movie[i])    </span><br><span class="line">movies = filter(lambda imdb: imdb != 0, movies)    </span><br><span class="line">total_movies = len(movies)    </span><br><span class="line"></span><br><span class="line">URL = [0]*total_movies    </span><br><span class="line">IMDB = [0]*total_movies    </span><br><span class="line">URL_IMDB = &#123;&quot;url&quot;:[],&quot;imdb&quot;:[]&#125;    </span><br><span class="line">i = 0    `</span><br><span class="line">for movie in movies:    </span><br><span class="line">(URL[i], IMDB[i]) = get_poster(movie, base_url)    </span><br><span class="line">if URL[i] != base_url+&quot;&quot;:    </span><br><span class="line">URL_IMDB[&quot;url&quot;].append(URL[i])    </span><br><span class="line">URL_IMDB[&quot;imdb&quot;].append(IMDB[i])    </span><br><span class="line">i += 1    `</span><br><span class="line"># URL = filter(lambda url: url != base_url+&quot;&quot;, URL)    </span><br><span class="line">df = pd.DataFrame(data=URL_IMDB)    </span><br><span class="line"></span><br><span class="line">total_movies = len(df)    </span><br><span class="line"></span><br><span class="line">import urllib    </span><br><span class="line"></span><br><span class="line">poster_path = &quot;/Users/wannjiun/Desktop/nycdsa/project_5_recommender/posters/&quot;    </span><br><span class="line">for i in range(total_movies):    </span><br><span class="line">urllib.urlretrieve(df.url[i], poster_path + str(i) + &quot;.jpg&quot;)    </span><br><span class="line"></span><br><span class="line">from keras.applications import VGG16    </span><br><span class="line">from keras.applications.vgg16 import preprocess_input    </span><br><span class="line">from keras.preprocessing import image as kimage    </span><br><span class="line"></span><br><span class="line">image = [0]*total_movies    </span><br><span class="line">x = [0]*total_movies    </span><br><span class="line">for i in range(total_movies):    </span><br><span class="line">image[i] = kimage.load_img(poster_path + str(i) + &quot;.jpg&quot;, target_size=(224, 224))    </span><br><span class="line">x[i] = kimage.img_to_array(image[i])    </span><br><span class="line">x[i] = np.expand_dims(x[i], axis=0)    </span><br><span class="line">x[i] = preprocess_input(x[i])    </span><br><span class="line"></span><br><span class="line">model = VGG16(include_top=False, weights=&apos;imagenet&apos;)    </span><br><span class="line"></span><br><span class="line">prediction = [0]*total_movies    </span><br><span class="line">matrix_res = np.zeros([total_movies,25088])    </span><br><span class="line">for i in range(total_movies):    </span><br><span class="line">prediction[i] = model.predict(x[i]).ravel()    </span><br><span class="line">matrix_res[i,:] = prediction[i]    </span><br><span class="line"></span><br><span class="line">similarity_deep = matrix_res.dot(matrix_res.T)    </span><br><span class="line">norms = np.array([np.sqrt(np.diagonal(similarity_deep))])    </span><br><span class="line">similarity_deep = similarity_deep / norms / norms.T</span><br></pre></td></tr></table></figure></p>
+<p>在代码中，我们首先使用API和IMDB id，从TMDB网站获取电影海报。然后向VGG16提供海报来训练神经网络。最后，用VGG16学习的特征来计算余弦相似性。获得电影相似性之后，我们可以推荐相似度最高的电影。VGG16总共有25088个学来的特征，我们使用这些特征来描述数据集中的每个电影。</p>
+<p>来看看使用深度学习的电影推荐系统。<br><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/5915869245d0a.png?imageMogr2/format/jpg/quality/90" alt="图片7"></p>
+<p>《导火线》不再和爱情戏剧一起出现了！这些电影海报有一些相同的特点：深蓝色的、上面还有人物等等。让我们再来试试《玩具总动员》。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/5915870809f4e.png?imageMogr2/format/jpg/quality/90" alt="图片8"></p>
+<p>《阿甘正传》不会再被推荐了！结果看起来不错，朕心甚慰，再来试试别的！</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/5915874655a48.png?imageMogr2/format/jpg/quality/90" alt="图片9"></p>
+<p>注意，这些海报里都有一或两个人，并有冷色系的主题风格。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/591587603eeda.png?imageMogr2/format/jpg/quality/90" alt="图片10"></p>
+<p>这些海报想让观众知道相应电影的氛围欢乐、紧张，并有很多动作镜头，所以海报的颜色也很强烈。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/591587b2f2d5f.png?imageMogr2/format/jpg/quality/90" alt="图片11">、</p>
+<p>不同于上一组，这些海报想告诉观众：这些电影讲述的是一个单身汉。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/591587d52861f.png?imageMogr2/format/jpg/quality/90" alt="图片12"></p>
+<p>我们找到的与《功夫熊猫》类似的电影。</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/591587f40c416.png?imageMogr2/format/jpg/quality/90" alt="图片13"></p>
+<p>这一组很有趣。一群相似的怪兽以及汤姆·克鲁斯！</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/59158814e9846.png?imageMogr2/format/jpg/quality/90" alt="图片14"></p>
+<p>所有这些海报里都有姿势类似的女士。等等，那个是奥尼尔！？</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/59158836892e9.png?imageMogr2/format/jpg/quality/90" alt="图片15、"></p>
+<p>成功找到了蜘蛛侠！</p>
+<p><img src="https://static.leiphone.com/uploads/new/article/740_740/201705/5915886713383.png?imageMogr2/format/jpg/quality/90" alt="图片16"></p>
+<p>这些海报的排版设计很接近。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在推荐系统中有几种使用深度学习的方法：</p>
+<ul>
+<li>无监督学习</li>
+<li>从协同过滤中预测潜在特征</li>
+<li>将深度学习生成的特征作为辅助信息</li>
+</ul>
+<p>电影海报具有创造噱头和兴趣的视觉元素。这个项目中，我们使用了无监督深度学习，通过海报来学习电影的相似性。显然，这只是在推荐系统中使用深度学习的第一步，我们还可以尝试很多东西。例如，我们可以用深度学习来预测协同过滤生成的潜在特征。Spotify的音乐推荐也使用了类似的方法，区别于图像处理，他们通过处理歌曲的声音，来用深度学习来预测协同过滤中的潜在特征。还有一个可能的方向。是把深度学习学到的特征作为辅助信息，来提高预测的准确性。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/08/smackdown/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          themes
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="深度学习做推荐电影" data-title="深度学习做推荐电影" data-url="http://yoursite.com/2018/03/07/深度学习做推荐电影/"  data-images="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" data-content="深度学习做推荐电影">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2018 广志大兄弟
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
