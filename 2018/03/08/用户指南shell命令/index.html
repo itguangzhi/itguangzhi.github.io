@@ -117,7 +117,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/sqoop2/" style="font-size: 20px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
+						<a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/sqoop2/" style="font-size: 20px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
 					</div>
 				</section>
 				
@@ -187,8 +187,6 @@
   
   <div class="article-inner">
     
-      <input type="hidden" class="isFancy" />
-    
     
       <header class="article-header">
         
@@ -215,8 +213,10 @@
       
     
     <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="sqoop2系统入门之2汇总-用户指南shell命令"><a href="#sqoop2系统入门之2汇总-用户指南shell命令" class="headerlink" title="sqoop2系统入门之2汇总:用户指南shell命令"></a>sqoop2系统入门之2汇总:用户指南shell命令</h1><p>问题导读<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.sqoop2有哪两种运行模式？</span><br><span class="line">2.哪个模式，有些命令不支持？</span><br><span class="line">3.sqoop2辅助命令有哪些，作用是什么？</span><br><span class="line">4.set命令是否连接sqoop server？</span><br><span class="line">5.show命令显示哪些信息？</span><br><span class="line">6.如何使用show 命令显示指定信息？</span><br><span class="line">7.sqoop2中，如何定义数据源及数据流向？</span><br><span class="line">8.你认为link的作用是什么？</span><br></pre></td></tr></table></figure></p>
+		
+			
+			
+				<h1 id="sqoop2系统入门之2汇总-用户指南shell命令"><a href="#sqoop2系统入门之2汇总-用户指南shell命令" class="headerlink" title="sqoop2系统入门之2汇总:用户指南shell命令"></a>sqoop2系统入门之2汇总:用户指南shell命令</h1><p>问题导读<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.sqoop2有哪两种运行模式？</span><br><span class="line">2.哪个模式，有些命令不支持？</span><br><span class="line">3.sqoop2辅助命令有哪些，作用是什么？</span><br><span class="line">4.set命令是否连接sqoop server？</span><br><span class="line">5.show命令显示哪些信息？</span><br><span class="line">6.如何使用show 命令显示指定信息？</span><br><span class="line">7.sqoop2中，如何定义数据源及数据流向？</span><br><span class="line">8.你认为link的作用是什么？</span><br></pre></td></tr></table></figure></p>
 <p>sqoop2对于sqoop1有很大的变化，但是网上并没有系统的文章，所以这里about云整理下。以下内容来自官网，及个人理解，如有错误或则异议，大家可回帖讨论。<br>Sqoop 2提供的命令是通过使用REST 接口进行交互。客户端能运行两种模式：交互和批处理模式。 create, update 和clone命令在批处理模式中当前不支持。交互模式支持所有的命令。</p>
 <p>可以使用sqoop2-shell，进入交互模式</p>
 <blockquote>
@@ -363,13 +363,23 @@
 <p>Next  Previous</p>
 </blockquote>
 
-      
-    </div>
+			
+		
+	</div>
     
   </div>
   
     
 <nav id="article-nav">
+  
+    <a href="/2018/03/10/Hexo 博客首页自动添加Read More标记/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          Hexo博客首页自动添加ReadMore标记
+        
+      </div>
+    </a>
   
   
     <a href="/2018/03/08/用户指南5分钟入门Demo/" id="article-nav-older" class="article-nav-link-wrap">
@@ -410,20 +420,19 @@
         &copy; 2018 广志大兄弟
       </div>
         <div class="footer-right">
-          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+		心中有远方，必能远方
+       <!-- <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a> -->  
         </div>
     </div>
   </div>
 </footer>
     </div>
     
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
 
 <script>
 	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
+		fancybox: false,
+		mathjax: false,
 		animate: true,
 		isHome: false,
 		isPost: true,
@@ -435,26 +444,6 @@
 </script>
 <script src="/js/main.js"></script>
 
-
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
-</script>
-
-<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
 
 
   </div>
