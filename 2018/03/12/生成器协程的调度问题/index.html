@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>生成器协程的调度问题 | 广志大兄弟的个人网站</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前作介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成器协程的调度问题">
+<meta property="og:url" content="http://yoursite.com/2018/03/12/生成器协程的调度问题/index.html">
+<meta property="og:site_name" content="广志大兄弟的个人网站">
+<meta property="og:description" content="前作介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递">
+<meta property="og:updated_time" content="2018-03-12T04:18:42.389Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="生成器协程的调度问题">
+<meta name="twitter:description" content="前作介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递">
+  
+    <link rel="alternative" href="/atom.xml" title="广志大兄弟的个人网站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/H%2B.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">广志大兄弟</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">欲戴王冠，必承其重</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/guangzhi" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:itguangzhi@163.com" title="mail">mail</a>
+					        
+								<a class="qq" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3534466071&site=qq&menu=yes" title="qq">qq</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/sqoop2/" style="font-size: 20px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">广志大兄弟</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">广志大兄弟</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">欲戴王冠，必承其重</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/guangzhi" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:itguangzhi@163.com" title="mail">mail</a>
+			        
+						<a class="qq" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3534466071&site=qq&menu=yes" title="qq">qq</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-生成器协程的调度问题" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/12/生成器协程的调度问题/" class="article-date">
+  	<time datetime="2018-03-12T04:04:46.000Z" itemprop="datePublished">2018-03-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      生成器协程的调度问题
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+		
+			
+			
+				<p><a href="">前作</a>介绍了 Python 中的 <code>yield</code> 关键字。此篇介绍如何使用 <code>yield</code> 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。</p>
+<h1 id="协程及其特点"><a href="#协程及其特点" class="headerlink" title="协程及其特点"></a>协程及其特点</h1><p>协程是一种特殊的子程序，它<em>可以在特定的位置暂停/恢复</em>（而不是像普通函数那样在逻辑上顺序执行）；并且<em>每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递信息给协程，影响协程的行为。</em></p>
+<p>从「可以暂停/恢复」来看，协程类似于 Python 中的迭代器。不过，迭代器仅只是将值返回给调用者，其内部的逻辑是确定的，无法与调用者做更多的交互。</p>
+<p>因为协程可以暂停/恢复，所以，我们可以在多个协程中分别执行不同的任务；然后由调度器管理协程之间的执行，实现多任务并发。</p>
+<p>此外，协程和调用者在同一线程中执行；考虑到线程是操作系统进行任务调度的最小单元，<em>协程和调用者之间的切换，没有 CPU 上下文切换的开销</em>。因此，相对使用多线程、多进程实现多任务并发，协程在这方面的开销非常小。</p>
+<p>同样由于协程之间共享线程，所以使用协程实现的多任务并发，无法实现真正的并行。因此，显而易见，<em>协程适合 I/O 密集型的任务并发，而不适合 CPU 密集型的任务并发。</em></p>
+<h1 id="协程调度基础"><a href="#协程调度基础" class="headerlink" title="协程调度基础"></a>协程调度基础</h1><p>最简单的协程的例子，我们实际上已经见过了。在「使用 <code>send()</code> 方法与生成器函数通信」一节中，<code>func</code>就扮演了协程函数的角色。每当协程函数在 <code>yield</code> 表达式处暂停，调用者就收到上一步计算的结果；每当协程函数自 yield 表达式处恢复，协程函数就用接收到的数进行下一轮计算。</p>
+<p>在见识过最简单的协程示例之后，我们试着看看在调度协程的过程中，需要怎样处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">from collections import deque               # 1.</span><br><span class="line"></span><br><span class="line">class Dispatcher(object):                   # 2.</span><br><span class="line">    def __init__(self, tasks):</span><br><span class="line">        self.tasks = deque(tasks)           # 3.</span><br><span class="line">    def next(self):</span><br><span class="line">        return self.tasks.pop()             # 4.</span><br><span class="line">    def run(self):</span><br><span class="line">        while len(self.tasks):              # 5.</span><br><span class="line">            task = self.next()</span><br><span class="line">            try:</span><br><span class="line">                next(task)                  # 6.</span><br><span class="line">            except StopIteration:</span><br><span class="line">                pass                        # 7.</span><br><span class="line">            else:</span><br><span class="line">                self.tasks.appendleft(task) # 8.</span><br><span class="line"></span><br><span class="line">def greeting(name, times):                  # 9.</span><br><span class="line">    for i in range(times):</span><br><span class="line">        yield                               # 10.</span><br><span class="line">        print(&quot;Hello, %s.%d!&quot; % (name, i))</span><br><span class="line"></span><br><span class="line">dispatcher = Dispatcher([greeting(&apos;Liam&apos;, 5), greeting(&apos;Sophia&apos;, 4),</span><br><span class="line">                                            greeting(&apos;Cancan&apos;, 6)])</span><br><span class="line"></span><br><span class="line">dispatcher.run()</span><br></pre></td></tr></table></figure>
+<p>这段代码中，有两个主要角色：调度器 (2) 和任务 (9)。</p>
+<p>从调度器的角度来说，我们自 <code>collections</code> 模块引入了 <code>deque</code> 容器 (1)，用于在 (3) 处保存任务。而后，我们在 (4) 定义了调度器 <code>Dispatcher</code> 的轮询函数 <code>next()</code>，它返回下一个尚未终止的任务。在调度器的 <code>run()</code> 函数中，(5) 和 (8) 保证了循环处理所有尚未完成的任务并清理已完成的任务，(6) 和 (7) 则负责触发每个任务的下一步动作。</p>
+<p>从任务的角度来说，<code>greeting</code> 是一个生成器函数，是具体的协程任务。在 (10) 处，<code>yield</code> 表达式标记了函数暂停/恢复的位置；它将逻辑上连续的任务，在时间上切分成了若干段。</p>
+<p>这段代码执行起来结果大致是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Hello, Cancan.0!</span><br><span class="line">Hello, Sophia.0!</span><br><span class="line">Hello, Liam.0!</span><br><span class="line">Hello, Cancan.1!</span><br><span class="line">Hello, Sophia.1!</span><br><span class="line">Hello, Liam.1!</span><br><span class="line">Hello, Cancan.2!</span><br><span class="line">Hello, Sophia.2!</span><br><span class="line">Hello, Liam.2!</span><br><span class="line">Hello, Cancan.3!</span><br><span class="line">Hello, Sophia.3!</span><br><span class="line">Hello, Liam.3!</span><br><span class="line">Hello, Cancan.4!</span><br><span class="line">Hello, Liam.4!</span><br><span class="line">Hello, Cancan.5!</span><br></pre></td></tr></table></figure>
+<p>看起来和多线程那种乱七八糟的输出顺序有点像，不是吗？当然，此处由于使用 <code>deque.pop()</code>轮询任务队列，所以输出顺序大致是有迹可循的。不过，这并不影响我们将其作为协程调度的示例。</p>
+<p>在这个例子中，尽管调用者和协程之间没有其他的通信，协程函数内也没有真正意义上的 I/O 操作，但我们仍可以进行一些总结。</p>
+<p>首先，生成器函数充当了协程函数，实现了协程。</p>
+<p>其次，协程任务在逻辑上是连续的，但是我们可以用 <code>yield</code> 表达式在时间上把协程任务分成若干部分。</p>
+<p>再次，用 <code>yield</code> 分割的任务，需要有一个机制控制器暂停/恢复。这个机制此处由调度器提供。</p>
+<p>再者，对于调度器来说，它需要知道「有哪些协程任务需要恢复」。因此，它必然直接或间接地维护一个事件队列。此处，我们用 <code>Dispatcher.tasks</code> 完成了这一工作。</p>
+<p>最后，对于每个协程（任务）来说，一旦被暂停，其恢复就必须依赖主动唤起。因此，调度器必须「恰到好处」地反复唤起线程——不能多也不能少：多则浪费执行时间，甚至抛出异常；少则留下未能完成的任务。因此，调度器必须恰当地维护上述队列，确定何时从队列中移除已完成的任务。在我们的例子中，(6) 和 (7) 协同完成了这一工作。</p>
+<h1 id="异步-I-O-任务模拟"><a href="#异步-I-O-任务模拟" class="headerlink" title="异步 I/O 任务模拟"></a>异步 I/O 任务模拟</h1><p>回顾一下刚才的协程任务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def greeting(name, times):</span><br><span class="line">    for i in range(times):</span><br><span class="line">        yield</span><br><span class="line">        print(&quot;Hello, %s.%d!&quot; % (name, i))</span><br></pre></td></tr></table></figure>
+<p>在这个任务里，<code>yield</code>表达式将原本在逻辑上连续的循环，人为地在时间上切分成了若干份。然而，除了用于演示暂停/恢复的携程调度之外，这个例子实际上没有必要使用协程实现。这是因为，在协程任务中，去掉 <code>yield</code>表达式之后，所有的操作都是立即完成的；不存在需要阻塞以等待 I/O 的空耗 CPU 的情况。</p>
+<p>下列代码模拟了一个需要阻塞等待 I/O 的任务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from time import sleep</span><br><span class="line">from random import random as rd</span><br><span class="line"></span><br><span class="line">def greeting(name, <span class="built_in">times</span>, duration = 1):    <span class="comment"># 1.</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="built_in">times</span>):</span><br><span class="line">        sleep(2 * duration * rd())          <span class="comment"># 2.</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Hello, %s.%d!"</span> % (name, i))</span><br></pre></td></tr></table></figure>
+<p>此处，新定义的 <code>greeting</code> 函数 (1) 有一个新的参数：<code>duration</code>。而后，在每次循环打印招呼信息的之前，会现行阻塞一段时间 (2)。这一阻塞就模拟了实际情况中的 I/O 类操作：空占 CPU 资源，但不进行任何计算。阻塞的时间是 <code>2 * duration * rd()</code>，这是一个一 duration 为期望的随机变量，用来模拟预计阻塞 <code>duration</code> 秒但实际情况会有波动的 I/O 任务。</p>
+<p>假设 <code>duration</code> 设置为定值 1 而 <code>times</code> 设置为定值 3，那么执行一次<code>greeting</code> 函数，平均需要耗时 3 秒。如若顺序执行 3 个这样的函数，平均下来，一共需要耗费 9 秒的时间。而这 9 秒之中，大多数时间 CPU 都仅只在空耗，没有执行实际的计算任务。因此，我们可以考虑用协程将它们并发起来执行，降低总的空耗的时间。为此，我们有如下思路。</p>
+<ul>
+<li>将每个 I/O 任务理解为一个事件；</li>
+<li>维护一个队列，用于记录尚在进行中的事件，以便后续操作；</li>
+<li>当事件生成时，向上述队列注册（即将事件添加进队列）；</li>
+<li>使用轮询（polling）等方式，捕获完成的事件；</li>
+<li>对已完成的事件，进行后续操作（特别地，恢复协程函数），而后从队列中删除该事件。<br>现在，我们开始逐步在这一思路的指导下，实现协程并发。</li>
+</ul>
+<h1 id="引出休眠事件（SleepEvent）"><a href="#引出休眠事件（SleepEvent）" class="headerlink" title="引出休眠事件（SleepEvent）"></a>引出休眠事件（SleepEvent）</h1><p>回顾一下新版的 greeting 函数。若要通过生成器实现协程，就必然要添加 yield 表达式。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from time import sleep</span><br><span class="line">from random import random as rd</span><br><span class="line"></span><br><span class="line">def greeting(name, <span class="built_in">times</span>, duration = 1):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="built_in">times</span>):</span><br><span class="line">        yield sleep(2 * duration * rd())          <span class="comment"># 1.</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Hello, %s.%d!"</span> % (name, i))</span><br></pre></td></tr></table></figure>
+<p>简单粗暴地以 (1) 的方式加上 <code>yield</code> 表达式是不行的。这是因为，<code>yield</code>表达式会对 <code>sleep</code>函数求值，而后将该值返回给调用者并暂停。但是，对 <code>sleep</code> 函数求值的过程，就是模拟的 I/O 操作，会阻塞执行线程。在阻塞完毕之后，再通过 <code>yield</code>暂停，这就没有意义了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def coroutine_sleep(duration):              # 1.</span><br><span class="line">    return SleepEvent(duration)             # 2.</span><br><span class="line"></span><br><span class="line">def greeting(name, times, duration = 1):</span><br><span class="line">    for i in range(times):</span><br><span class="line">        yield coroutine_sleep(duration)     # 3.</span><br><span class="line">        print(&quot;Hello, %s.%d!&quot; % (name, i))</span><br></pre></td></tr></table></figure></p>
+<p>因此，我们需要定义新的 <code>coroutine_sleep</code> 函数 (1)。这个函数会生成一个事件（SleepEvent），然后不阻塞地立即返回 (2)。因此，在 (3) 处，<code>yield</code> 表达式会将 <code>coroutine_sleep</code> 返回的 <code>SleepEvent</code> 对象传递给协程函数的调用者，并暂停当前协程函数。</p>
+<h1 id="定义事件框架"><a href="#定义事件框架" class="headerlink" title="定义事件框架"></a>定义事件框架</h1><p>接下来，我们需要定义事件框架。在实际动手之前，我们应该先分析一下一个事件类需要有哪些功能。</p>
+<ul>
+<li>首先，事件应该有能力让外部知道自身存在。因此事件类应该伴随一个队列；并且在生成事件对象时，将自身注册进这个队列。</li>
+<li>其次，事件应该有能力让外部知道自身状态，以便检查事件状态，进而进行下一步操作。因此，事件类应该是一个闭包，保存生成事件时的一些状态；并提供一个接口，利用这些状态检查事件是否完成。</li>
+<li>最后，事件应当提供一个接口，记录在事件完成之后应当做什么；并且在事件完成之后执行这些操作。</li>
+</ul>
+<p>据此，我们应该有如下代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">events_list = list()                    # 1.</span><br><span class="line"></span><br><span class="line">class Event(object):</span><br><span class="line">    def __init__(self, *args, **kwargs):</span><br><span class="line">        events_list.append(self)        # 2.</span><br><span class="line">        self._callback = lambda:None    # 3.</span><br><span class="line">    def is_ready(self):                 # 4.</span><br><span class="line">        ready = self._is_ready()</span><br><span class="line">        if ready:</span><br><span class="line">            self._callback()            # 5.</span><br><span class="line">        return ready</span><br><span class="line">    def set_callback(self, callback):   # 6.</span><br><span class="line">        self._callback = callback</span><br></pre></td></tr></table></figure>
+<p>这里，(1) 处我们定义了一个全局的队列，用于记录尚在进行中的事件；与此同时，每当生成事件类对象时，(2) 会将当前事件对象注册到队列中。(3) 则定义了回调函数，用于记录事件完成之后执行什么操作。</p>
+<p>(4) 和 (6) 分别是对外的接口。(4) 让外部有能力知道自身状态，其中 _is_ready() 需要在子类中实现；而 (6) 允许外部记录在事件完成之后应当做什么。(5) 则保证了当事件完成之后，(6) 中的设置会被正确执行。</p>
+<p>至此，我们可以定义出 SleepEvent 类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from time import time as current_time</span><br><span class="line">from random import random as rd</span><br><span class="line"></span><br><span class="line">class SleepEvent(Event):                                    # 1.</span><br><span class="line">    def __init__(self, duration):</span><br><span class="line">        super(SleepEvent, self).__init__(duration)</span><br><span class="line">        self._duration = 2 * rd() * duration                # 2.</span><br><span class="line">        self._start_time = current_time()                   # 3.</span><br><span class="line">    def _is_ready(self):</span><br><span class="line">        return (current_time() - self._start_time &gt;= self._duration)# 4.</span><br></pre></td></tr></table></figure></p>
+<p>这里，(1) 处定义了 SleepEvent 事件类，用来模拟 I/O 事件；模拟的核心在于 (2) 处定义的睡眠时长。(3) 则记录了事件诞生时的状态，用在 (4) 处确认事件是否已完成。</p>
+<p>至此，协程函数这一侧的代码我们已经完成了，接下来我们看看调度器一侧的代码如何实现。</p>
+<h1 id="用轮询捕捉已完成的事件"><a href="#用轮询捕捉已完成的事件" class="headerlink" title="用轮询捕捉已完成的事件"></a>用轮询捕捉已完成的事件</h1><p>因为我们在 events_list 中保存了所有尚在执行中的事件。这是相当简单的工作，所以不作过多的解释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">while len(events_list):</span><br><span class="line">    for event in events_list:</span><br><span class="line">        if event.is_ready():</span><br><span class="line">            events_list.remove(event)</span><br><span class="line">            break</span><br></pre></td></tr></table></figure>
+<h1 id="唤醒逻辑"><a href="#唤醒逻辑" class="headerlink" title="唤醒逻辑"></a>唤醒逻辑</h1><p>在 Event 类的定义中，is_ready() 函数会在事件完成后调用 _callback 函数。而对于协程函数来说，一个事件完成后，需要做的事情无非是：唤醒，恢复执行到下一个暂停点。因此可以有这样的唤醒逻辑。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def _next(gen_task):</span><br><span class="line">    try:</span><br><span class="line">        yielded_event = next(gen_task)                      # 1.</span><br><span class="line">        yielded_event.set_callback(lambda: _next(gen_task)) # 2.</span><br><span class="line">    except StopIteration:</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
+<p>这里，(1) 调用 Python 内建的 next 函数，唤醒协程函数，执行到下一个暂停点，并接受其返回值，保存在 yielded_event 当中。而后，在 (2) 处将该 Event 对象设置为 Lambda 函数 lambda: _next(gen_task)。显然，这是一个递归调用 _next 函数自身的闭包——捕获了需要继续唤醒的生成器 gen_task。若生成器执行完毕，则无需继续唤醒。因此在 (3) 处，直接 pass 即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python3</span><br><span class="line"></span><br><span class="line">from time import time as current_time</span><br><span class="line">from random import random as rd</span><br><span class="line"></span><br><span class="line">events_list = list()</span><br><span class="line"></span><br><span class="line">class Event(object):</span><br><span class="line">    def __init__(self, *args, **kwargs):</span><br><span class="line">        events_list.append(self)</span><br><span class="line">        self._callback = lambda:None</span><br><span class="line">    def is_ready(self):</span><br><span class="line">        ready = self._is_ready()</span><br><span class="line">        if ready:</span><br><span class="line">            self._callback()</span><br><span class="line">        return ready</span><br><span class="line">    def set_callback(self, callback):</span><br><span class="line">        self._callback = callback</span><br><span class="line"></span><br><span class="line">class SleepEvent(Event):</span><br><span class="line">    def __init__(self, duration):</span><br><span class="line">        super(SleepEvent, self).__init__(duration)</span><br><span class="line">        self._duration = 2 * rd() * duration</span><br><span class="line">        self._start_time = current_time()</span><br><span class="line">    def _is_ready(self):</span><br><span class="line">        return (current_time() - self._start_time &gt;= self._duration)</span><br><span class="line"></span><br><span class="line">class Dispatcher(object):</span><br><span class="line">    def __init__(self, tasks):</span><br><span class="line">        self.tasks = tasks</span><br><span class="line">        self._start()</span><br><span class="line">    def _next(self, gen_task):</span><br><span class="line">        try:</span><br><span class="line">            yielded_event = next(gen_task)</span><br><span class="line">            yielded_event.set_callback(lambda: self._next(gen_task))</span><br><span class="line">        except StopIteration:</span><br><span class="line">            pass</span><br><span class="line">    def _start(self):</span><br><span class="line">        for task in self.tasks:</span><br><span class="line">            self._next(task)</span><br><span class="line">    def polling(self):</span><br><span class="line">        while len(events_list):</span><br><span class="line">            for event in events_list:</span><br><span class="line">                if event.is_ready():</span><br><span class="line">                    events_list.remove(event)</span><br><span class="line">                    break</span><br><span class="line"></span><br><span class="line">def coroutine_sleep(duration):</span><br><span class="line">    return SleepEvent(duration)</span><br><span class="line"></span><br><span class="line">def greeting(name, times, duration = 1):</span><br><span class="line">    for i in range(times):</span><br><span class="line">        yield coroutine_sleep(duration)</span><br><span class="line">        print(&quot;Hello, %s.%d!&quot; % (name, i))</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    def test():</span><br><span class="line">        dispatcher = Dispatcher([greeting(&apos;Liam&apos;, 3), greeting(&apos;Sophia&apos;, 3), greeting(&apos;Cancan&apos;, 3)])</span><br><span class="line">        dispatcher.polling()</span><br><span class="line"></span><br><span class="line">    import timeit</span><br><span class="line">    timeit_times = 10</span><br><span class="line">    avg_cost = timeit.timeit(lambda: test(), number = timeit_times) / timeit_times</span><br><span class="line">    print(&apos;%.3f&apos; % (avg_cost))</span><br></pre></td></tr></table></figure>
+<p>可能的执行结果是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ python coroutine_async.py</span><br><span class="line">Hello, Liam.0!</span><br><span class="line">Hello, Liam.1!</span><br><span class="line">Hello, Liam.2!</span><br><span class="line">Hello, Cancan.0!</span><br><span class="line">Hello, Sophia.0!</span><br><span class="line">Hello, Cancan.1!</span><br><span class="line">Hello, Sophia.1!</span><br><span class="line">Hello, Cancan.2!</span><br><span class="line">Hello, Sophia.2!</span><br><span class="line">......</span><br><span class="line">Hello, Liam.0!</span><br><span class="line">Hello, Sophia.0!</span><br><span class="line">Hello, Sophia.1!</span><br><span class="line">Hello, Cancan.0!</span><br><span class="line">Hello, Liam.1!</span><br><span class="line">Hello, Sophia.2!</span><br><span class="line">Hello, Liam.2!</span><br><span class="line">Hello, Cancan.1!</span><br><span class="line">Hello, Cancan.2!</span><br><span class="line">3.400</span><br></pre></td></tr></table></figure>
+<p>可以看到，平均下来，使用协程并发地执行三个 greeting 任务（times = 3, duration = 1）只需要 3.4 秒；耗时远低于顺序执行所需的 9 秒。</p>
+
+			
+		
+	</div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/12/理解yield关键字/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">理解yield关键字</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="生成器协程的调度问题" data-title="生成器协程的调度问题" data-url="http://yoursite.com/2018/03/12/生成器协程的调度问题/"  data-images="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" data-content="生成器协程的调度问题">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+	  <!--
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+		-->
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2018 广志大兄弟
+      </div>
+        <div class="footer-right">
+		心中有远方，必能远方
+       <!-- <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a> -->  
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script>
+	var yiliaConfig = {
+		fancybox: false,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+  </div>
+</body>
+</html>

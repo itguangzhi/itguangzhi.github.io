@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>理解yield关键字 | 广志大兄弟的个人网站</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python 是非常灵活的语言，其中yield关键字是普遍容易困惑的概念。 此篇将介绍 yield关键字，及其相关的概念。 迭代、可迭代、迭代器迭代（iteration）与可迭代（iterable） 迭代是一种操作；可迭代是对象的一种特性。  很多数据都是「容器」；它们包含了很多其他类型的元素。实际使用容器时，我们常常需要逐个获取其中的元素。逐个获取元素的过程，就是「迭代」。 1234# iter">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解yield关键字">
+<meta property="og:url" content="http://yoursite.com/2018/03/12/理解yield关键字/index.html">
+<meta property="og:site_name" content="广志大兄弟的个人网站">
+<meta property="og:description" content="Python 是非常灵活的语言，其中yield关键字是普遍容易困惑的概念。 此篇将介绍 yield关键字，及其相关的概念。 迭代、可迭代、迭代器迭代（iteration）与可迭代（iterable） 迭代是一种操作；可迭代是对象的一种特性。  很多数据都是「容器」；它们包含了很多其他类型的元素。实际使用容器时，我们常常需要逐个获取其中的元素。逐个获取元素的过程，就是「迭代」。 1234# iter">
+<meta property="og:updated_time" content="2018-03-12T04:04:01.893Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解yield关键字">
+<meta name="twitter:description" content="Python 是非常灵活的语言，其中yield关键字是普遍容易困惑的概念。 此篇将介绍 yield关键字，及其相关的概念。 迭代、可迭代、迭代器迭代（iteration）与可迭代（iterable） 迭代是一种操作；可迭代是对象的一种特性。  很多数据都是「容器」；它们包含了很多其他类型的元素。实际使用容器时，我们常常需要逐个获取其中的元素。逐个获取元素的过程，就是「迭代」。 1234# iter">
+  
+    <link rel="alternative" href="/atom.xml" title="广志大兄弟的个人网站" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/H%2B.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">广志大兄弟</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">欲戴王冠，必承其重</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/guangzhi" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="mailto:itguangzhi@163.com" title="mail">mail</a>
+					        
+								<a class="qq" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3534466071&site=qq&menu=yes" title="qq">qq</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/sqoop2/" style="font-size: 20px;">sqoop2</a> <a href="/tags/themes/" style="font-size: 10px;">themes</a> <a href="/tags/深度学习-电影推荐/" style="font-size: 10px;">深度学习.电影推荐</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">广志大兄弟</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">广志大兄弟</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">欲戴王冠，必承其重</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/guangzhi" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="mailto:itguangzhi@163.com" title="mail">mail</a>
+			        
+						<a class="qq" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3534466071&site=qq&menu=yes" title="qq">qq</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-理解yield关键字" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/12/理解yield关键字/" class="article-date">
+  	<time datetime="2018-03-12T03:52:58.000Z" itemprop="datePublished">2018-03-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      理解yield关键字
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+	</div>
+
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+		
+			
+			
+				<p>Python 是非常灵活的语言，其中<code>yield</code>关键字是普遍容易困惑的概念。</p>
+<p>此篇将介绍 <code>yield</code>关键字，及其相关的概念。</p>
+<h1 id="迭代、可迭代、迭代器"><a href="#迭代、可迭代、迭代器" class="headerlink" title="迭代、可迭代、迭代器"></a>迭代、可迭代、迭代器</h1><h2 id="迭代（iteration）与可迭代（iterable）"><a href="#迭代（iteration）与可迭代（iterable）" class="headerlink" title="迭代（iteration）与可迭代（iterable）"></a>迭代（iteration）与可迭代（iterable）</h2><blockquote>
+<p>迭代是一种操作；可迭代是对象的一种特性。</p>
+</blockquote>
+<p>很多数据都是「容器」；它们包含了很多其他类型的元素。实际使用容器时，我们常常需要逐个获取其中的元素。<br><em>逐个获取元素的过程，就是「迭代」。</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># iteration</span><br><span class="line">a_list = [1, 2, 3]</span><br><span class="line">for i in a_list:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<p>如果我们可以从一个对象中，逐个地获取元素，那么我们就说这个对象是「可迭代的」。</p>
+<p>Python 中的顺序类型，都是可迭代的（list, tuple, string）。其余包括 dict, set, file 也是可迭代的。对于用户自己实现的类型，如果提供了 <strong>iter</strong>() 或者 <strong>getitem</strong>() 方法，那么该类的对象也是可迭代的。</p>
+<h1 id="迭代器（iterator）"><a href="#迭代器（iterator）" class="headerlink" title="迭代器（iterator）"></a>迭代器（iterator）</h1><blockquote>
+<p>迭代器是一种对象。</p>
+</blockquote>
+<p>迭代器抽象的是一个「数据流」，是只允许迭代一次的对象。对迭代器不断调用 next() 方法，则可以依次获取下一个元素；当迭代器中没有元素时，调用 next() 方法会抛出 StopIteration 异常。迭代器的 <strong>iter</strong>() 方法返回迭代器自身；因此迭代器也是可迭代的。</p>
+<h1 id="迭代器协议（iterator-protocol）"><a href="#迭代器协议（iterator-protocol）" class="headerlink" title="迭代器协议（iterator protocol）"></a>迭代器协议（iterator protocol）</h1><blockquote>
+<p>迭代器协议指的是容器类需要包含一个特殊方法。</p>
+</blockquote>
+<p>如果一个容器类提供了 <code>__iter__()</code> 方法，并且该方法能返回一个能够逐个访问容器内所有元素的迭代器，则我们说该容器类实现了迭代器协议。</p>
+<p>Python 中的迭代器协议和 Python 中的 <code>for</code> 循环是紧密相连的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># iterator protocol and for loop</span><br><span class="line">for x in something:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<p>Python 处理 <code>for</code> 循环时，首先会调用内建函数 <code>iter(something)</code>，它实际上会调用 <code>something.__iter__()</code>，返回 <code>something</code> 对应的迭代器。而后，<code>for</code> 循环会调用内建函数 <code>next()</code>，作用在迭代器上，获取迭代器的下一个元素，并赋值给 <code>x</code>。此后，Python 才开始执行循环体。</p>
+<h1 id="生成器、yield-表达式"><a href="#生成器、yield-表达式" class="headerlink" title="生成器、yield 表达式"></a>生成器、yield 表达式</h1><blockquote>
+<p>生成器函数（generator function）和生成器（generator）<br>生成器函数是一种特殊的函数；生成器则是特殊的迭代器。</p>
+</blockquote>
+<p>如果一个函数包含 yield 表达式，那么它是一个生成器函数；调用它会返回一个特殊的迭代器，称为生成器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    return 1</span><br><span class="line"></span><br><span class="line">def gen():</span><br><span class="line">    yield 1</span><br><span class="line"></span><br><span class="line">print(type(func))   # &lt;class &apos;function&apos;&gt;</span><br><span class="line">print(type(gen))    # &lt;class &apos;function&apos;&gt;</span><br><span class="line"></span><br><span class="line">print(type(func())) # &lt;class &apos;int&apos;&gt;</span><br><span class="line">print(type(gen()))  # &lt;class &apos;generator&apos;&gt;</span><br></pre></td></tr></table></figure>
+<p>如上，生成器 <code>gen</code> 看起来和普通的函数没有太大区别。仅只是将 <code>return</code> 换成了 <code>yield</code>。用 <code>type()</code> 函数打印二者的类型也能发现，<code>func</code> 和 <code>gen</code> 都是函数。然而，二者的返回值的类型就不同了。<code>func()</code> 是一个 <code>int</code> 类型的对象；而 <code>gen()</code> 则是一个迭代器对象。</p>
+<h1 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h1><p>如前所述，如果一个函数定义中包含 <code>yield</code> 表达式，那么该函数是一个生成器函数（而非普通函数）。实际上，<code>yield</code> 仅能用于定义生成器函数。</p>
+<p>与普通函数不同，生成器函数被调用后，其函数体内的代码并不会立即执行，而是返回一个生成器（generator-iterator）。当返回的生成器调用成员方法时，相应的生成器函数中的代码才会执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def square():</span><br><span class="line">    for x in range(4):</span><br><span class="line">        yield x ** 2</span><br><span class="line">square_gen = square()</span><br><span class="line">for x in square_gen:</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<p>前面说到，for 循环会调用 iter() 函数，获取一个生成器；而后调用 next() 函数，将生成器中的下一个值赋值给 x；再执行循环体。因此，上述 for 循环基本等价于：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">genitor = square_gen.__iter__()</span><br><span class="line">while True:</span><br><span class="line">    x = geniter.next() # Python 3 是 __next__()</span><br><span class="line">    print(x)</span><br><span class="line"></span><br><span class="line">```	</span><br><span class="line">注意到，square 是一个生成器函数；作为它的返回值，square_gen 已经是一个迭代器；迭代器的 __iter__() 返回它自己。因此 geniter 对应的生成器函数，即是 square。</span><br><span class="line"></span><br><span class="line">每次执行到 x = geniter.next() 时，square 函数会从上一次暂停的位置开始，一直执行到下一个 yield 表达式，将 yield 关键字后的表达式列表返回给调用者，并再次暂停。注意，*每次从暂停恢复时，生成器函数的内部变量、指令指针、内部求值栈等内容和暂停时完全一致。*</span><br><span class="line"></span><br><span class="line"># 生成器的方法</span><br><span class="line">生成器有一些方法。调用这些方法可以控制对应的生成器函数；不过，若是生成器函数已在执行过程中，调用这些方法则会抛出 `ValueError` 异常。</span><br><span class="line"></span><br><span class="line">* generator.next()：从上一次在 yield 表达式暂停的状态恢复，继续执行到下一次遇见 yield 表达式。当该方法被调用时，当前 yield 表达式的值为 None，下一个 yield 表达式中的表达式列表会被返回给该方法的调用者。若没有遇到 yield 表达式，生成器函数就已经退出，那么该方法会抛出 StopIterator 异常。</span><br><span class="line">* generator.send(value)：和 generator.next() 类似，差别仅在与它会将当前 yield 表达式的值设置为 value。</span><br><span class="line">* generator.throw(type[, value[, traceback]])：向生成器函数抛出一个类型为 type 值为 value 调用栈为 traceback 的异常，而后让生成器函数继续执行到下一个 yield 表达式。其余行为与 generator.next() 类似。</span><br><span class="line">* generator.close()：告诉生成器函数，当前生成器作废不再使用。</span><br><span class="line"></span><br><span class="line"># 举例和说明</span><br><span class="line">### \如果你看不懂生成器函数</span><br><span class="line">如果你还是不太能理解生成器函数，那么大致上你可以这样去理解。</span><br><span class="line"></span><br><span class="line">* 在函数开始处，加入 result = list()；</span><br><span class="line">* 将每个 yield 表达式 yield expr 替换为 result.append(expr)；</span><br><span class="line">* 在函数末尾处，加入 return result。</span><br><span class="line"></span><br><span class="line"># 关于「下一个」yield 表达式</span><br><span class="line">介绍「生成器的方法」时，我们说当调用 `generator.next()` 时，生成器函数会从当前位置开始执行到下一个` yield` 表达式。这里的「下一个」指的是执行逻辑的下一个。因此</span><br></pre></td></tr></table></figure>
+<p>def f123():<br>    yield 1<br>    yield 2<br>    yield 3</p>
+<p>for item in f123(): # 1, 2, and 3, will be printed<br>    print(item)</p>
+<p>def f13():<br>    yield 1<br>    while False:<br>        yield 2<br>    yield 3</p>
+<p>for item in f13(): # 1 and 3, will be printed<br>    print(item)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 使用 send() 方法与生成器函数通信</span><br></pre></td></tr></table></figure></p>
+<p>def func():<br>    x = 1<br>    while True:<br>        y = (yield x)<br>        x += y</p>
+<p>geniter = func()<br>geniter.next()  # 1<br>geniter.send(3) # 4<br>geniter.send(10)# 14<br><code>`</code><br>此处，生成器函数 <code>func</code> 用 <code>yield</code> 表达式，将处理好的 <code>x</code> 发送给生成器的调用者；与此同时，生成器的调用者通过 send 函数，将外部信息作为生成器函数内部的 yield 表达式的值，保存在 y 当中，并参与后续的处理。</p>
+<p>这一特性是使用 yield 在 Python 中使用协程的基础。</p>
+<h1 id="yield-的好处"><a href="#yield-的好处" class="headerlink" title="yield 的好处"></a>yield 的好处</h1><p>Python 的老用户应该会熟悉 Python 2 中的一个特性：内建函数 range 和 xrange。其中，range 函数返回的是一个列表，而 xrange 返回的是一个迭代器。</p>
+<blockquote>
+<p>在 Python 3 中，range 相当于 Python 2 中的 xrange；而 Python 2 中的 range 可以用 list(range()) 来实现。</p>
+</blockquote>
+<p>Python 之所以要提供这样的解决方案，是因为在很多时候，我们只是需要逐个顺序访问容器内的元素。大多数时候，我们不需要「一口气获取容器内所有的元素」。比方说，顺序访问容器内的前 5 个元素，可以有两种做法：</p>
+<ul>
+<li>获取容器内的所有元素，然后取出前 5 个；</li>
+<li>从头开始，逐个迭代容器内的元素，迭代 5 个元素之后停止。<br>显而易见，如果容器内的元素数量非常多（比如有 10 ** 8 个），或者容器内的元素体积非常大，那么后一种方案能节省巨大的时间、空间开销。</li>
+</ul>
+<p>现在假设，我们有一个函数，其产出（返回值）是一个列表。而若我们知道，调用者对该函数的返回值，只有逐个迭代这一种方式。那么，如果函数生产列表中的每一个元素都需要耗费非常多的时间，或者生成所有元素需要等待很长时间，则使用 yield 把函数变成一个生成器函数，每次只产生一个元素，就能节省很多开销了。</p>
+<p><a href="https://liam0205.me/2017/06/30/understanding-yield-in-python/" target="_blank" rel="noopener">原文来自这里</a></p>
+
+			
+		
+	</div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/12/生成器协程的调度问题/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          生成器协程的调度问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/12/git速查表/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">git速查表</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="理解yield关键字" data-title="理解yield关键字" data-url="http://yoursite.com/2018/03/12/理解yield关键字/"  data-images="https://raw.githubusercontent.com/tremblehub/itguangzhi.com/slave1/repo/img/tremblehub.github.io/%E7%99%BD%E7%A5%9E.png" data-content="理解yield关键字">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+	  <!--
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+		-->
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2018 广志大兄弟
+      </div>
+        <div class="footer-right">
+		心中有远方，必能远方
+       <!-- <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a> -->  
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script>
+	var yiliaConfig = {
+		fancybox: false,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+  </div>
+</body>
+</html>
