@@ -9,17 +9,17 @@
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前作介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递">
+  <meta name="description" content="之前的文章介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="生成器协程的调度问题">
 <meta property="og:url" content="http://yoursite.com/2018/03/12/生成器协程的调度问题/index.html">
 <meta property="og:site_name" content="广志大兄弟的个人网站">
-<meta property="og:description" content="前作介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递">
-<meta property="og:updated_time" content="2018-03-12T04:18:42.389Z">
+<meta property="og:description" content="之前的文章介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可">
+<meta property="og:updated_time" content="2018-03-12T04:22:41.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="生成器协程的调度问题">
-<meta name="twitter:description" content="前作介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递">
+<meta name="twitter:description" content="之前的文章介绍了 Python 中的 yield 关键字。此篇介绍如何使用 yield 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。 协程及其特点协程是一种特殊的子程序，它可以在特定的位置暂停/恢复（而不是像普通函数那样在逻辑上顺序执行）；并且每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可">
   
     <link rel="alternative" href="/atom.xml" title="广志大兄弟的个人网站" type="application/atom+xml">
   
@@ -220,7 +220,7 @@
 		
 			
 			
-				<p><a href="">前作</a>介绍了 Python 中的 <code>yield</code> 关键字。此篇介绍如何使用 <code>yield</code> 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。</p>
+				<p><a href="https://itguangzhi.github.io/2018/03/12/%E7%90%86%E8%A7%A3yield%E5%85%B3%E9%94%AE%E5%AD%97/" target="_blank" rel="noopener">之前的文章</a>介绍了 Python 中的 <code>yield</code> 关键字。此篇介绍如何使用 <code>yield</code> 表达式，在 Python 中实现一个最基本的协程调度示例，避免 I/O 操作占用大量 CPU 计算时间。</p>
 <h1 id="协程及其特点"><a href="#协程及其特点" class="headerlink" title="协程及其特点"></a>协程及其特点</h1><p>协程是一种特殊的子程序，它<em>可以在特定的位置暂停/恢复</em>（而不是像普通函数那样在逻辑上顺序执行）；并且<em>每当协程暂停时，调用者可以从协程中获取状态，决定调用者接下来的走向；以及每当协程恢复时，调用者可以传递信息给协程，影响协程的行为。</em></p>
 <p>从「可以暂停/恢复」来看，协程类似于 Python 中的迭代器。不过，迭代器仅只是将值返回给调用者，其内部的逻辑是确定的，无法与调用者做更多的交互。</p>
 <p>因为协程可以暂停/恢复，所以，我们可以在多个协程中分别执行不同的任务；然后由调度器管理协程之间的执行，实现多任务并发。</p>
